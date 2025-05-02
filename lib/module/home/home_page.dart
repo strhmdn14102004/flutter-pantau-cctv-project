@@ -3,7 +3,6 @@
 import "dart:convert";
 
 import "package:base/base.dart";
-import "package:cached_network_image/cached_network_image.dart";
 import "package:cctv_sasat/api/endpoint/cctv/cctv_item.dart";
 import "package:cctv_sasat/helper/formats.dart";
 import "package:cctv_sasat/module/home/home_bloc.dart";
@@ -372,35 +371,19 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ClipRRect(
-                borderRadius: BorderRadius.vertical(
-                  top: Radius.circular(Dimensions.size20),
+              Container(
+                height: 130,
+                width: 200,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(Dimensions.size20),
+                  ),
                 ),
-                child: cctv.thumbnailUrl != null
-                    ? CachedNetworkImage(
-                        imageUrl: cctv.thumbnailUrl!,
-                        height: 100,
-                        width: double.infinity,
-                        fit: BoxFit.cover,
-                        errorWidget: (context, url, error) => Container(
-                          height: 100,
-                          color: AppColors.surfaceContainerHigh(),
-                          child: Icon(
-                            Icons.broken_image,
-                            color: AppColors.onSurface(),
-                          ),
-                        ),
-                      )
-                    : Container(
-                        height: 100,
-                        width: double.infinity,
-                        color: AppColors.surfaceContainerHigh(),
-                        child: Icon(
-                          Icons.videocam,
-                          size: 40,
-                          color: AppColors.onSurface(),
-                        ),
-                      ),
+                child: WebViewWidget(
+                  controller: WebViewController()
+                    ..setJavaScriptMode(JavaScriptMode.unrestricted)
+                    ..loadRequest(Uri.parse(cctv.sourceUrl)),
+                ),
               ),
               Padding(
                 padding: EdgeInsets.all(Dimensions.size10),
