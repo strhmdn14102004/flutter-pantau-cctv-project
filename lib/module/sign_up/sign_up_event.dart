@@ -9,11 +9,13 @@ class SignUpSubmit extends SignUpEvent {
   final String email;
   final String name;
   final String password;
+  final String username;
 
   SignUpSubmit({
     required this.email,
     required this.password,
     required this.name,
+    required this.username,
   });
 
   @override

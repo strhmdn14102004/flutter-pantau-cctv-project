@@ -26,6 +26,7 @@ class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController tecEmail = TextEditingController();
   final TextEditingController tecPassword = TextEditingController();
   final TextEditingController name = TextEditingController();
+  final TextEditingController username = TextEditingController();
 
   bool obscurePassword = true;
   String? backgroundPath;
@@ -120,6 +121,12 @@ class _SignUpPageState extends State<SignUpPage> {
                           ),
                           SizedBox(height: Dimensions.size15),
                           _buildInputField(
+                            username,
+                            "username".tr(),
+                            Icons.supervised_user_circle_rounded,
+                          ),
+                          SizedBox(height: Dimensions.size15),
+                          _buildInputField(
                             tecEmail,
                             "email".tr(),
                             Icons.alternate_email,
@@ -154,6 +161,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                         email: tecEmail.text,
                                         password: tecPassword.text,
                                         name: name.text,
+                                        username: username.text,
                                       ),
                                     );
                               }

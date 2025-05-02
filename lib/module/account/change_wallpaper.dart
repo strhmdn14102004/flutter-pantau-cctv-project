@@ -148,7 +148,7 @@ class _WallpaperSettingsPageState extends State<WallpaperSettingsPage> {
                   ),
                   SizedBox(height: Dimensions.size30),
                   Text(
-                    "default_wallpapers".tr(),
+                    "default_wallpaper".tr(),
                     style: TextStyle(
                       fontSize: Dimensions.text18,
                       fontWeight: FontWeight.bold,

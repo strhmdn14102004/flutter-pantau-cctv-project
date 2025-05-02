@@ -139,7 +139,7 @@ class SignInPageState extends State<SignInPage> with WidgetsBindingObserver {
                             children: [
                               visionInputField(
                                 controller: tecEmailAddress,
-                                label: "email".tr(),
+                                label: "username".tr(),
                                 icon: Icons.alternate_email,
                               ),
                               SizedBox(height: Dimensions.size15),
