@@ -42,7 +42,12 @@
   "custom_wallpaper": "Custom wallpaper",
   "pick_from_gallery": "Pick from gallery",
   "system": "System",
+  "register_success": "Register success",
+  "terjadi_kesalahan_ketika_mendaftar": "An error occurred when registering",
+  "register_failed": "Register failed",
   "no_have_account?register_here": "No have account? register here",
   "current_custom_wallpaper_preview": "Current custom wallpaper preview",
+  "login_failed.Please_try_again": "Login failed. Please try again",
+  "login_failed.please_check_your_username_and_password": "Login failed. please check your username and password",
   "filter_by_location": "Filter by location"
 }

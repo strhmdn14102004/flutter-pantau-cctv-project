@@ -41,8 +41,13 @@
   "pick_from_gallery": "Pilih dari galeri",
   "current_custom_wallpaper_preview": "Prabaca wallpaper kustom saat ini",
   "system": "Sistem",
+  "register_success": "Pendaftaran berhasil",
+  "register_failed": "Pendaftaran gagal",
+  "terjadi_kesalahan_ketika_mendaftar": "Terjadi kesalahan ketika mendaftar",
   "no_cctv_found": "Tidak ada CCTV ditemukan",
   "tap_to_upload_photo": "Ketuk untuk mengunggah foto",
   "no_have_account?register_here": "Tidak punya akun? daftar disini",
+  "login_failed.Please_try_again": "Masuk gagal. Silakan coba lagi",
+  "login_failed.please_check_your_username_and_password": "Masuk gagal. silakan periksa nama pengguna dan kata sandi Anda",
   "filter_by_location": "Filter berdasarkan lokasi"
 }

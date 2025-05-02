@@ -5,6 +5,7 @@ import "package:cctv_sasat/api/endpoint/sign_in/sign_in_response.dart";
 import "package:cctv_sasat/module/sign_in/sign_in_event.dart";
 import "package:cctv_sasat/module/sign_in/sign_in_state.dart";
 import "package:dio/dio.dart";
+import "package:easy_localization/easy_localization.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:shared_preferences/shared_preferences.dart";
 
@@ -33,16 +34,17 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
       } else {
         emit(
           SignInSubmitFailed(
-            errorMessage: "Login failed. Please check your credentials.",
+            errorMessage:
+                "login_failed.please_check_your_username_and_password".tr(),
           ),
         );
       }
     } on DioException catch (e) {
       final errorMessage =
-          e.response?.data["message"] ?? "Login failed. Please try again.";
+          e.response?.data["message"] ?? "login_failed.Please_try_again".tr();
       emit(SignInSubmitFailed(errorMessage: errorMessage));
     } catch (e) {
-      emit(SignInSubmitFailed(errorMessage: "An unexpected error occurred."));
+      emit(SignInSubmitFailed(errorMessage: "login_failed.Please_try_again".tr()));
     } finally {
       emit(SignInSubmitFinished());
     }
