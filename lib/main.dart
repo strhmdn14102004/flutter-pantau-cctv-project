@@ -283,7 +283,7 @@ class AppState extends State<App> {
                 return MaterialApp.router(
                   scrollBehavior: BaseScrollBehavior(),
                   scaffoldMessengerKey: rootScaffoldMessengerKey,
-                  title: "CCTV SASAT",
+                  title: "Pantau CCTV",
                   routerConfig: goRouter,
                   localizationsDelegates: context.localizationDelegates,
                   supportedLocales: context.supportedLocales,
