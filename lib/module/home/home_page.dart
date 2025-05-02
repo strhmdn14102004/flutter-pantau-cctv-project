@@ -8,6 +8,7 @@ import "package:cctv_sasat/helper/formats.dart";
 import "package:cctv_sasat/module/home/home_bloc.dart";
 import "package:cctv_sasat/module/home/home_event.dart";
 import "package:cctv_sasat/module/home/home_state.dart";
+import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:lottie/lottie.dart";
@@ -78,7 +79,7 @@ class _HomePageState extends State<HomePage> {
                 _buildLocationFilter(),
                 SizedBox(height: Dimensions.size15),
                 Text(
-                  "CCTV List",
+                  "List_cctv".tr(),
                   style: TextStyle(
                     color: AppColors.onSurface(),
                     fontSize: Dimensions.text20,
@@ -100,7 +101,7 @@ class _HomePageState extends State<HomePage> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          "Pantau CCTV",
+          "Pantau_cctv".tr(),
           style: TextStyle(
             color: AppColors.onSurface(),
             fontSize: Dimensions.text24,
@@ -131,7 +132,7 @@ class _HomePageState extends State<HomePage> {
           decoration: InputDecoration(
             filled: true,
             fillColor: AppColors.surfaceContainer(),
-            hintText: "Search CCTV...",
+            hintText: "Search_cctv".tr(),
             hintStyle: TextStyle(color: AppColors.onSurfaceVariant()),
             prefixIcon: Icon(Icons.search, color: AppColors.outline()),
             border: OutlineInputBorder(
@@ -178,7 +179,7 @@ class _HomePageState extends State<HomePage> {
                     if (index == 0) {
                       return ChoiceChip(
                         label: Text(
-                          "All",
+                          "All".tr(),
                           style: TextStyle(color: AppColors.onSurface()),
                         ),
                         selected: selectedId == null,
@@ -217,11 +218,11 @@ class _HomePageState extends State<HomePage> {
               icon: Icon(Icons.filter_alt, color: AppColors.onSurface()),
               onPressed: () async {
                 await BaseSheets.spinner(
-                  title: "Filter Location",
+                  title: "filter_by_location".tr(),
                   spinnerItems: [
                     SpinnerItem(
                       identity: null,
-                      description: "All",
+                      description: "All".tr(),
                       selected: selectedId == null,
                     ),
                     ...locations.map(
@@ -267,7 +268,7 @@ class _HomePageState extends State<HomePage> {
                     height: 200,
                   ),
                   Text(
-                    "Tidak ada CCTV ditemukan",
+                    "no_cctv_found".tr(),
                     style: TextStyle(
                       fontSize: Dimensions.text16,
                       color: AppColors.onSurface(),
@@ -330,7 +331,7 @@ class _HomePageState extends State<HomePage> {
                     context.read<HomeBloc>().add(LoadCctvData());
                     context.read<HomeBloc>().add(LoadLocations());
                   },
-                  child: Text("Retry"),
+                  child: Text("Retry".tr()),
                 ),
               ],
             ),
@@ -412,14 +413,18 @@ class _HomePageState extends State<HomePage> {
                       children: [
                         Icon(
                           cctv.isActive ? Icons.check_circle : Icons.cancel,
-                          color: cctv.isActive ? Colors.green : Colors.red,
+                          color: cctv.isActive
+                              ? AppColors.secondary()
+                              : AppColors.error(),
                           size: Dimensions.size15,
                         ),
                         SizedBox(width: Dimensions.size5),
                         Text(
-                          cctv.isActive ? "Active" : "Inactive",
+                          cctv.isActive ? "Active".tr() : "Inactive".tr(),
                           style: TextStyle(
-                            color: cctv.isActive ? Colors.green : Colors.red,
+                            color: cctv.isActive
+                                ? AppColors.secondary()
+                                : AppColors.error(),
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -465,7 +470,11 @@ class _HomePageState extends State<HomePage> {
             ),
             child: Row(
               children: [
-                Icon(Icons.live_tv, color: Colors.red, size: Dimensions.size20),
+                Icon(
+                  Icons.live_tv,
+                  color: AppColors.error(),
+                  size: Dimensions.size20,
+                ),
                 SizedBox(width: Dimensions.size5),
                 Expanded(
                   child: Text(

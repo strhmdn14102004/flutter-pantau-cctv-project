@@ -5,6 +5,7 @@ import "dart:ui";
 import "package:base/base.dart";
 import "package:cctv_sasat/module/root/root_bloc.dart";
 import "package:cctv_sasat/module/root/root_state.dart";
+import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
@@ -98,14 +99,15 @@ class RootPageState extends State<RootPage> with WidgetsBindingObserver {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     navItem(
-                        icon: Icons.linked_camera_rounded,
-                        index: 0,
-                        label: "Cctv",),
+                      icon: Icons.linked_camera_rounded,
+                      index: 0,
+                      label: "Cctv",
+                    ),
                     SizedBox(width: 50), // Space for middle button
                     navItem(
                       icon: Icons.account_circle,
                       index: 1,
-                      label: "Account",
+                      label: "Account".tr(),
                     ),
                   ],
                 ),
