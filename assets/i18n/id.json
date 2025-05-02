@@ -18,8 +18,6 @@
   "home": "Beranda",
   "account": "Akun",
   "about_account": "Tentang Akun",
-  "bypass_price": "Harga Bypass",
-  "imei_price": "Harga IMEI",
   "are_you_sure_want_to_sign_out": "Apakah Anda yakin ingin keluar?",
   "setting": "Pengaturan",
   "no": "Tidak",
@@ -47,5 +45,4 @@
   "tap_to_upload_photo": "Ketuk untuk mengunggah foto",
   "no_have_account?register_here": "Tidak punya akun? daftar disini",
   "filter_by_location": "Filter berdasarkan lokasi"
-
 }

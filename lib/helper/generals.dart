@@ -1,11 +1,9 @@
-import "package:base/base.dart";
 import "package:cctv_sasat/shared.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:get/get.dart";
 import "package:go_router/go_router.dart";
 import "package:shared_preferences/shared_preferences.dart";
-import "package:url_launcher/url_launcher_string.dart";
 
 class Generals {
   static BuildContext? context() {
@@ -50,19 +48,6 @@ class Generals {
       await context()!.setLocale(newLocale);
 
       Get.updateLocale(newLocale);
-    }
-  }
-
-  static Future<void> launchUrl(String url) async {
-    try {
-      if (!await launchUrlString(
-        url,
-        mode: LaunchMode.externalNonBrowserApplication,
-      )) {
-        throw Exception("Could not launch $url");
-      }
-    } catch (e) {
-      BaseOverlays.error(message: e.toString());
     }
   }
 }

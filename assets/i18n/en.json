@@ -18,8 +18,6 @@
   "home": "Home",
   "account": "Account",
   "about_account": "About Account",
-  "bypass_price": "Bypass Price",
-  "imei_price": "IMEI Price",
   "are_you_sure_want_to_sign_out": "Are you sure want to sign out?",
   "no": "No",
   "settings": "Setting",
@@ -44,7 +42,7 @@
   "custom_wallpaper": "Custom wallpaper",
   "pick_from_gallery": "Pick from gallery",
   "system": "System",
+  "no_have_account?register_here": "No have account? register here",
   "current_custom_wallpaper_preview": "Current custom wallpaper preview",
   "filter_by_location": "Filter by location"
-  
 }
