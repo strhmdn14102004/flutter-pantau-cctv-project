@@ -3,6 +3,7 @@
 import "dart:io";
 import "dart:ui";
 
+import "package:base/base.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:image_picker/image_picker.dart";
@@ -58,11 +59,14 @@ class _WallpaperSettingsPageState extends State<WallpaperSettingsPage> {
       onTap: () => _setWallpaper(path),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 300),
-        margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-        width: 100,
-        height: 100,
+        margin: EdgeInsets.symmetric(
+          horizontal: Dimensions.size10,
+          vertical: Dimensions.size10,
+        ),
+        width: Dimensions.size100,
+        height: Dimensions.size100,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(Dimensions.size20),
           border: Border.all(
             color: isSelected ? Colors.white.withOpacity(0.8) : Colors.white24,
             width: isSelected ? 3 : 1,
@@ -71,13 +75,13 @@ class _WallpaperSettingsPageState extends State<WallpaperSettingsPage> {
             if (isSelected)
               BoxShadow(
                 color: Colors.white.withOpacity(0.3),
-                blurRadius: 10,
-                spreadRadius: 1,
+                blurRadius: Dimensions.size10,
+                spreadRadius: Dimensions.size1,
               ),
           ],
         ),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(Dimensions.size20),
           child: isAsset
               ? Image.asset(path, fit: BoxFit.cover)
               : Image.file(File(path), fit: BoxFit.cover),
@@ -104,23 +108,26 @@ class _WallpaperSettingsPageState extends State<WallpaperSettingsPage> {
               ),
             ),
             child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+              filter: ImageFilter.blur(
+                sigmaX: Dimensions.size20,
+                sigmaY: Dimensions.size20,
+              ),
               child: Container(color: Colors.black.withOpacity(0.2)),
             ),
           ),
 
           SafeArea(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.all(20),
+              padding: EdgeInsets.all(Dimensions.size20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Custom AppBar-like header
                   Container(
-                    padding: const EdgeInsets.all(16),
+                    padding: EdgeInsets.all(Dimensions.size15),
                     decoration: BoxDecoration(
                       color: Colors.white.withOpacity(0.05),
-                      borderRadius: BorderRadius.circular(24),
+                      borderRadius: BorderRadius.circular(Dimensions.size25),
                       border: Border.all(color: Colors.white.withOpacity(0.2)),
                     ),
                     child: Row(
@@ -130,14 +137,14 @@ class _WallpaperSettingsPageState extends State<WallpaperSettingsPage> {
                           child: Icon(
                             Icons.turn_left_rounded,
                             color: Colors.white,
-                            size: 32,
+                            size: Dimensions.size35,
                           ),
                         ),
-                        const SizedBox(width: 10),
+                        SizedBox(width: Dimensions.size10),
                         Text(
                           "change_wallpaper".tr(),
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: Dimensions.text18,
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
                           ),
@@ -145,20 +152,20 @@ class _WallpaperSettingsPageState extends State<WallpaperSettingsPage> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 30),
+                  SizedBox(height: Dimensions.size30),
 
                   // Default Wallpapers
                   Text(
                     "default_wallpapers".tr(),
                     style: TextStyle(
-                      fontSize: 18,
+                      fontSize: Dimensions.text18,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                     ),
                   ),
-                  const SizedBox(height: 10),
+                  SizedBox(height: Dimensions.size10),
                   SizedBox(
-                    height: 120,
+                    height: Dimensions.size100,
                     child: ListView(
                       scrollDirection: Axis.horizontal,
                       children: defaultWallpapers
@@ -166,36 +173,37 @@ class _WallpaperSettingsPageState extends State<WallpaperSettingsPage> {
                           .toList(),
                     ),
                   ),
-                  const SizedBox(height: 30),
+                  SizedBox(height: Dimensions.size10),
 
                   // Custom Wallpaper
                   Text(
                     "custom_wallpaper".tr(),
                     style: TextStyle(
-                      fontSize: 18,
+                      fontSize: Dimensions.text18,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                     ),
                   ),
-                  const SizedBox(height: 10),
+                  SizedBox(height: Dimensions.size10),
                   Center(
                     child: GestureDetector(
                       onTap: _pickCustomWallpaper,
                       child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 16,
-                          horizontal: 20,
+                        padding: EdgeInsets.symmetric(
+                          vertical: Dimensions.size15,
+                          horizontal: Dimensions.size20,
                         ),
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
+                          borderRadius:
+                              BorderRadius.circular(Dimensions.size20),
                           color: Colors.white.withOpacity(0.05),
                           border: Border.all(color: Colors.white24),
                         ),
-                        child:  Row(
+                        child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Icon(Icons.photo_library, color: Colors.white70),
-                            SizedBox(width: 10),
+                            SizedBox(width: Dimensions.size10),
                             Text(
                               "pick_from_gallery".tr(),
                               style: TextStyle(
@@ -213,14 +221,14 @@ class _WallpaperSettingsPageState extends State<WallpaperSettingsPage> {
                   if (selectedWallpaperPath != null &&
                       !defaultWallpapers.contains(selectedWallpaperPath!))
                     Padding(
-                      padding: const EdgeInsets.only(top: 30),
+                      padding: EdgeInsets.only(top: Dimensions.size30),
                       child: Column(
                         children: [
-                           Text(
+                          Text(
                             "current_custom_wallpaper_preview".tr(),
                             style: TextStyle(color: Colors.white70),
                           ),
-                          const SizedBox(height: 10),
+                          SizedBox(height: Dimensions.size10),
                           _wallpaperPreview(
                             selectedWallpaperPath!,
                             isAsset: false,

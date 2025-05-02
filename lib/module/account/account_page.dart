@@ -203,7 +203,7 @@ class _AccountPageState extends State<AccountPage> with WidgetsBindingObserver {
           const SizedBox(height: 20),
           _glassCard(
             icon: Icons.wallpaper_rounded,
-            title: "Ubah Wallpaper",
+            title: "change_wallpaper".tr(),
             onTap: () async {
               await Navigator.push(
                 context,

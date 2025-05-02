@@ -78,21 +78,21 @@ class _SignUpPageState extends State<SignUpPage> {
             _buildBackground(),
             SafeArea(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.all(20),
+                padding: EdgeInsets.all(Dimensions.size20),
                 child: Column(
                   children: [
-                    const SizedBox(height: 10),
+                    SizedBox(height: Dimensions.size10),
                     AnimatedOpacity(
                       opacity: headerVisible ? 1.0 : 0.0,
                       duration: const Duration(milliseconds: 600),
                       curve: Curves.easeOut,
                       child: _visionHeader(),
                     ),
-                    const SizedBox(height: 20),
+                    SizedBox(height: Dimensions.size20),
                     GestureDetector(
                       onTap: _pickImage,
                       child: CircleAvatar(
-                        radius: 45,
+                        radius: Dimensions.size45,
                         backgroundImage: profileImage != null
                             ? FileImage(profileImage!)
                             : const AssetImage("assets/image/logo.png")
@@ -100,15 +100,15 @@ class _SignUpPageState extends State<SignUpPage> {
                         backgroundColor: Colors.white24,
                       ),
                     ),
-                    const SizedBox(height: 10),
+                    SizedBox(height: Dimensions.size10),
                     Text(
                       "tap_to_upload_photo".tr(),
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: Colors.white70,
-                        fontSize: 12,
+                        fontSize: Dimensions.text12,
                       ),
                     ),
-                    const SizedBox(height: 30),
+                    SizedBox(height: Dimensions.size30),
                     Form(
                       key: formKey,
                       child: Column(
@@ -118,13 +118,13 @@ class _SignUpPageState extends State<SignUpPage> {
                             "name".tr(),
                             Icons.person,
                           ),
-                          const SizedBox(height: 15),
+                          SizedBox(height: Dimensions.size15),
                           _buildInputField(
                             tecEmail,
                             "email".tr(),
                             Icons.alternate_email,
                           ),
-                          const SizedBox(height: 15),
+                          SizedBox(height: Dimensions.size15),
                           _buildInputField(
                             tecPassword,
                             "password".tr(),
@@ -144,7 +144,7 @@ class _SignUpPageState extends State<SignUpPage> {
                               },
                             ),
                           ),
-                          const SizedBox(height: 30),
+                          SizedBox(height: Dimensions.size30),
                           _buildVisionButton(
                             label: "sign_up".tr(),
                             onPressed: () {
@@ -174,25 +174,28 @@ class _SignUpPageState extends State<SignUpPage> {
 
   Widget _visionHeader() {
     return SmoothContainer(
-      borderRadius: BorderRadius.circular(28),
+      borderRadius: BorderRadius.circular(Dimensions.size30),
       color: Colors.white.withOpacity(0.15),
-      smoothness: 1,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      smoothness: Dimensions.size1,
+      padding: EdgeInsets.symmetric(
+        horizontal: Dimensions.size15,
+        vertical: Dimensions.size15,
+      ),
       child: Row(
         children: [
           InkWell(
             onTap: () => Navigator.pop(context),
-            child: const Icon(
+            child: Icon(
               Icons.turn_left_rounded,
               color: Colors.white,
-              size: 30,
+              size: Dimensions.size30,
             ),
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: Dimensions.size15),
           Text(
-            "Sign Up",
-            style: const TextStyle(
-              fontSize: 20,
+            "sign_up".tr(),
+            style: TextStyle(
+              fontSize: Dimensions.text20,
               fontWeight: FontWeight.bold,
               color: Colors.white,
             ),
@@ -213,7 +216,10 @@ class _SignUpPageState extends State<SignUpPage> {
         ),
       ),
       child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+        filter: ImageFilter.blur(
+          sigmaX: Dimensions.size20,
+          sigmaY: Dimensions.size20,
+        ),
         child: Container(color: Colors.black.withOpacity(0.2)),
       ),
     );
@@ -227,13 +233,16 @@ class _SignUpPageState extends State<SignUpPage> {
     Widget? suffixIcon,
   }) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: BorderRadius.circular(Dimensions.size20),
       child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        filter: ImageFilter.blur(
+          sigmaX: Dimensions.size10,
+          sigmaY: Dimensions.size10,
+        ),
         child: Container(
           decoration: BoxDecoration(
             color: Colors.white.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(Dimensions.size20),
             border: Border.all(color: Colors.white.withOpacity(0.3)),
           ),
           child: TextFormField(
@@ -246,7 +255,7 @@ class _SignUpPageState extends State<SignUpPage> {
               hintText: hint,
               hintStyle: const TextStyle(color: Colors.white54),
               border: InputBorder.none,
-              contentPadding: const EdgeInsets.all(20),
+              contentPadding: EdgeInsets.all(Dimensions.size20),
             ),
           ),
         ),
@@ -262,9 +271,9 @@ class _SignUpPageState extends State<SignUpPage> {
       onTap: onPressed,
       child: Container(
         width: 150,
-        height: 50,
+        height: Dimensions.size50,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(Dimensions.size20),
           gradient: LinearGradient(
             colors: [
               Colors.white.withOpacity(0.25),
@@ -277,7 +286,7 @@ class _SignUpPageState extends State<SignUpPage> {
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.15),
-              blurRadius: 10,
+              blurRadius: Dimensions.size10,
               offset: const Offset(0, 4),
             ),
           ],
@@ -285,10 +294,10 @@ class _SignUpPageState extends State<SignUpPage> {
         child: Center(
           child: Text(
             label,
-            style: const TextStyle(
+            style: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,
-              fontSize: 16,
+              fontSize: Dimensions.text16,
               letterSpacing: 1.1,
             ),
           ),

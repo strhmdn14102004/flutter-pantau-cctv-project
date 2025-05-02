@@ -96,37 +96,43 @@ class SignInPageState extends State<SignInPage> with WidgetsBindingObserver {
                     ),
                   ),
                   child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+                    filter: ImageFilter.blur(
+                      sigmaX: Dimensions.size20,
+                      sigmaY: Dimensions.size20,
+                    ),
                     child: Container(color: Colors.black.withOpacity(0.2)),
                   ),
                 ),
               SafeArea(
                 child: SingleChildScrollView(
                   child: Container(
-                    padding: const EdgeInsets.all(20),
+                    padding: EdgeInsets.all(Dimensions.size20),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        const SizedBox(height: 80),
+                        SizedBox(height: Dimensions.size80),
                         Image.asset(
                           "assets/image/logo.png",
                           width: 150,
                           height: 120,
                         ),
-                        const SizedBox(height: 50),
+                        SizedBox(height: Dimensions.size50),
                         Text(
                           "wellcome".tr(),
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 24,
+                            fontSize: Dimensions.text24,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         Text(
                           "sign_in_with_your_account".tr(),
-                          style: TextStyle(color: Colors.white70, fontSize: 20),
+                          style: TextStyle(
+                            color: Colors.white70,
+                            fontSize: Dimensions.text20,
+                          ),
                         ),
-                        const SizedBox(height: 20),
+                        SizedBox(height: Dimensions.size20),
                         Form(
                           key: formState,
                           child: Column(
@@ -136,7 +142,7 @@ class SignInPageState extends State<SignInPage> with WidgetsBindingObserver {
                                 label: "email".tr(),
                                 icon: Icons.alternate_email,
                               ),
-                              const SizedBox(height: 15),
+                              SizedBox(height: Dimensions.size15),
                               visionInputField(
                                 controller: tecPassword,
                                 label: "password".tr(),
@@ -159,7 +165,7 @@ class SignInPageState extends State<SignInPage> with WidgetsBindingObserver {
                             ],
                           ),
                         ),
-                        const SizedBox(height: 30),
+                        SizedBox(height: Dimensions.size30),
                         visionOSButton(
                           label: "sign_in".tr(),
                           onPressed: () {
@@ -187,7 +193,7 @@ class SignInPageState extends State<SignInPage> with WidgetsBindingObserver {
                             context.push("/sign-up");
                           },
                           child: Text(
-                            "Tidak Memiliki Akun? Daftar Disini",
+                            "no_have_account?register_here".tr(),
                             style: TextStyle(
                               color: Colors.white70,
                               fontSize: Dimensions.text14,
@@ -214,13 +220,16 @@ class SignInPageState extends State<SignInPage> with WidgetsBindingObserver {
     Widget? suffixIcon,
   }) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: BorderRadius.circular(Dimensions.size20),
       child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        filter: ImageFilter.blur(
+          sigmaX: Dimensions.size10,
+          sigmaY: Dimensions.size10,
+        ),
         child: Container(
           decoration: BoxDecoration(
             color: Colors.white.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(Dimensions.size20),
             border: Border.all(color: Colors.white.withOpacity(0.3)),
           ),
           child: TextFormField(
@@ -233,7 +242,7 @@ class SignInPageState extends State<SignInPage> with WidgetsBindingObserver {
               hintText: label,
               hintStyle: const TextStyle(color: Colors.white54),
               border: InputBorder.none,
-              contentPadding: const EdgeInsets.all(20),
+              contentPadding: EdgeInsets.all(Dimensions.size20),
             ),
           ),
         ),
@@ -249,9 +258,9 @@ class SignInPageState extends State<SignInPage> with WidgetsBindingObserver {
       onTap: onPressed,
       child: Container(
         width: 150,
-        height: 50,
+        height: Dimensions.size50,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(Dimensions.size20),
           gradient: LinearGradient(
             colors: [
               Colors.white.withOpacity(0.25),
@@ -264,7 +273,7 @@ class SignInPageState extends State<SignInPage> with WidgetsBindingObserver {
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.15),
-              blurRadius: 10,
+              blurRadius: Dimensions.size10,
               offset: const Offset(0, 4),
             ),
           ],
@@ -272,10 +281,10 @@ class SignInPageState extends State<SignInPage> with WidgetsBindingObserver {
         child: Center(
           child: Text(
             label,
-            style: const TextStyle(
+            style: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,
-              fontSize: 16,
+              fontSize: Dimensions.text16,
               letterSpacing: 1.1,
             ),
           ),
@@ -293,15 +302,15 @@ class SignInPageState extends State<SignInPage> with WidgetsBindingObserver {
         showSelectedIcon: false,
         style: SegmentedButton.styleFrom(
           shape: SmoothRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(Dimensions.size10),
             smoothness: 1,
           ),
           visualDensity: VisualDensity.compact,
           selectedBackgroundColor: AppColors.primaryContainer(),
           selectedForegroundColor: AppColors.onPrimaryContainer(),
           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-          textStyle: const TextStyle(
-            fontSize: 12,
+          textStyle: TextStyle(
+            fontSize: Dimensions.text12,
             fontWeight: FontWeight.bold,
           ),
         ),

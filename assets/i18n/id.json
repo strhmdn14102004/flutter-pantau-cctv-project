@@ -45,6 +45,7 @@
   "system": "Sistem",
   "no_cctv_found": "Tidak ada CCTV ditemukan",
   "tap_to_upload_photo": "Ketuk untuk mengunggah foto",
+  "no_have_account?register_here": "Tidak punya akun? daftar disini",
   "filter_by_location": "Filter berdasarkan lokasi"
 
 }
