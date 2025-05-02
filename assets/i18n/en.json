@@ -38,6 +38,13 @@
   "tap_to_upload_photo": "Tap to upload photo",
   "Active": "Active",
   "Inactive": "Inactive",
+  "no_cctv_found": "No CCTV found",
+  "change_wallpaper": "Change wallpaper",
+  "default_wallpaper": "Default wallpaper",
+  "custom_wallpaper": "Custom wallpaper",
+  "pick_from_gallery": "Pick from gallery",
+  "system": "System",
+  "current_custom_wallpaper_preview": "Current custom wallpaper preview",
   "filter_by_location": "Filter by location"
   
 }

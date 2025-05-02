@@ -3,6 +3,7 @@
 import "dart:io";
 import "dart:ui";
 
+import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:image_picker/image_picker.dart";
 import "package:shared_preferences/shared_preferences.dart";
@@ -133,8 +134,8 @@ class _WallpaperSettingsPageState extends State<WallpaperSettingsPage> {
                           ),
                         ),
                         const SizedBox(width: 10),
-                        const Text(
-                          "Change Wallpaper",
+                        Text(
+                          "change_wallpaper".tr(),
                           style: TextStyle(
                             fontSize: 18,
                             color: Colors.white,
@@ -147,8 +148,8 @@ class _WallpaperSettingsPageState extends State<WallpaperSettingsPage> {
                   const SizedBox(height: 30),
 
                   // Default Wallpapers
-                  const Text(
-                    "Default Wallpapers",
+                  Text(
+                    "default_wallpapers".tr(),
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -168,8 +169,8 @@ class _WallpaperSettingsPageState extends State<WallpaperSettingsPage> {
                   const SizedBox(height: 30),
 
                   // Custom Wallpaper
-                  const Text(
-                    "Custom Wallpaper",
+                  Text(
+                    "custom_wallpaper".tr(),
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -190,13 +191,13 @@ class _WallpaperSettingsPageState extends State<WallpaperSettingsPage> {
                           color: Colors.white.withOpacity(0.05),
                           border: Border.all(color: Colors.white24),
                         ),
-                        child: const Row(
+                        child:  Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Icon(Icons.photo_library, color: Colors.white70),
                             SizedBox(width: 10),
                             Text(
-                              "Pick from Gallery",
+                              "pick_from_gallery".tr(),
                               style: TextStyle(
                                 color: Colors.white,
                                 letterSpacing: 0.5,
@@ -215,8 +216,8 @@ class _WallpaperSettingsPageState extends State<WallpaperSettingsPage> {
                       padding: const EdgeInsets.only(top: 30),
                       child: Column(
                         children: [
-                          const Text(
-                            "Current Custom Wallpaper Preview",
+                           Text(
+                            "current_custom_wallpaper_preview".tr(),
                             style: TextStyle(color: Colors.white70),
                           ),
                           const SizedBox(height: 10),

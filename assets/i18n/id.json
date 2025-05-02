@@ -37,6 +37,13 @@
   "Inactive": "Tidak Aktif",
   "search": "Cari",
   "Account": "Akun",
+  "change_wallpaper": "Ubah wallpaper",
+  "default_wallpaper": "Wallpaper default",
+  "custom_wallpaper": "Wallpaper kustom",
+  "pick_from_gallery": "Pilih dari galeri",
+  "current_custom_wallpaper_preview": "Prabaca wallpaper kustom saat ini",
+  "system": "Sistem",
+  "no_cctv_found": "Tidak ada CCTV ditemukan",
   "tap_to_upload_photo": "Ketuk untuk mengunggah foto",
   "filter_by_location": "Filter berdasarkan lokasi"
 
