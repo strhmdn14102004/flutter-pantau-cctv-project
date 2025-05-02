@@ -19,9 +19,6 @@ class WallpaperSettingsPage extends StatefulWidget {
 class _WallpaperSettingsPageState extends State<WallpaperSettingsPage> {
   List<String> defaultWallpapers = [
     "assets/image/background.png",
-    "assets/image/background1.png",
-    "assets/image/background2.png",
-    "assets/image/background3.png",
   ];
 
   String? selectedWallpaperPath;
@@ -97,7 +94,6 @@ class _WallpaperSettingsPageState extends State<WallpaperSettingsPage> {
       extendBodyBehindAppBar: true,
       body: Stack(
         children: [
-          // Blurred background layer
           Container(
             decoration: BoxDecoration(
               image: DecorationImage(
@@ -115,14 +111,12 @@ class _WallpaperSettingsPageState extends State<WallpaperSettingsPage> {
               child: Container(color: Colors.black.withOpacity(0.2)),
             ),
           ),
-
           SafeArea(
             child: SingleChildScrollView(
               padding: EdgeInsets.all(Dimensions.size20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Custom AppBar-like header
                   Container(
                     padding: EdgeInsets.all(Dimensions.size15),
                     decoration: BoxDecoration(
@@ -153,8 +147,6 @@ class _WallpaperSettingsPageState extends State<WallpaperSettingsPage> {
                     ),
                   ),
                   SizedBox(height: Dimensions.size30),
-
-                  // Default Wallpapers
                   Text(
                     "default_wallpapers".tr(),
                     style: TextStyle(
@@ -174,8 +166,6 @@ class _WallpaperSettingsPageState extends State<WallpaperSettingsPage> {
                     ),
                   ),
                   SizedBox(height: Dimensions.size10),
-
-                  // Custom Wallpaper
                   Text(
                     "custom_wallpaper".tr(),
                     style: TextStyle(
@@ -216,8 +206,6 @@ class _WallpaperSettingsPageState extends State<WallpaperSettingsPage> {
                       ),
                     ),
                   ),
-
-                  // Show preview if custom wallpaper selected
                   if (selectedWallpaperPath != null &&
                       !defaultWallpapers.contains(selectedWallpaperPath!))
                     Padding(
