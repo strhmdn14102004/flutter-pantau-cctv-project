@@ -3,7 +3,7 @@ class SignInRequest {
     String username;
     String password;
 
-    SignInRequest({
+      SignInRequest({
         required this.username,
         required this.password,
     });
