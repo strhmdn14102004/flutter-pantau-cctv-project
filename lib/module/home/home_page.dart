@@ -1,6 +1,7 @@
 // ignore_for_file: deprecated_member_use
 
 import "dart:convert";
+import "dart:io";
 
 import "package:base/base.dart";
 import "package:cctv_sasat/api/endpoint/cctv/cctv_item.dart";
@@ -14,6 +15,7 @@ import "package:flutter_bloc/flutter_bloc.dart";
 import "package:lottie/lottie.dart";
 import "package:shared_preferences/shared_preferences.dart";
 import "package:webview_flutter/webview_flutter.dart";
+import 'package:cached_network_image/cached_network_image.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -25,6 +27,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   Map<String, dynamic>? user;
   bool loading = false;
+  final bool isIOS = Platform.isIOS;
 
   @override
   void initState() {
@@ -291,14 +294,15 @@ class _HomePageState extends State<HomePage> {
             },
             child: CustomScrollView(
               slivers: [
-                SliverToBoxAdapter(
-                  child: Column(
-                    children: [
-                      _buildLiveCctvCard(randomActive),
-                      SizedBox(height: Dimensions.size15),
-                    ],
+                if (!isIOS) // Only show live preview on Android
+                  SliverToBoxAdapter(
+                    child: Column(
+                      children: [
+                        _buildLiveCctvCard(randomActive),
+                        SizedBox(height: Dimensions.size15),
+                      ],
+                    ),
                   ),
-                ),
                 SliverGrid(
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
@@ -380,11 +384,13 @@ class _HomePageState extends State<HomePage> {
                     top: Radius.circular(Dimensions.size20),
                   ),
                 ),
-                child: WebViewWidget(
-                  controller: WebViewController()
-                    ..setJavaScriptMode(JavaScriptMode.unrestricted)
-                    ..loadRequest(Uri.parse(cctv.sourceUrl)),
-                ),
+                child: isIOS
+                    ? _buildThumbnail(cctv.thumbnailUrl)
+                    : WebViewWidget(
+                        controller: WebViewController()
+                          ..setJavaScriptMode(JavaScriptMode.unrestricted)
+                          ..loadRequest(Uri.parse(cctv.sourceUrl)),
+                      ),
               ),
               Padding(
                 padding: EdgeInsets.all(Dimensions.size10),
@@ -434,6 +440,44 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildThumbnail(String? thumbnailUrl) {
+    if (thumbnailUrl == null || thumbnailUrl.isEmpty) {
+      return Container(
+        color: AppColors.surfaceContainerHigh(),
+        child: Center(
+          child: Icon(
+            Icons.image_not_supported,
+            color: AppColors.onSurfaceVariant(),
+          ),
+        ),
+      );
+    }
+
+    return ClipRRect(
+      borderRadius: BorderRadius.vertical(
+        top: Radius.circular(Dimensions.size20),
+      ),
+      child: CachedNetworkImage(
+        imageUrl: thumbnailUrl,
+        fit: BoxFit.cover,
+        width: double.infinity,
+        placeholder: (context, url) => Container(
+          color: AppColors.surfaceContainerHigh(),
+          child: Center(child: CircularProgressIndicator()),
+        ),
+        errorWidget: (context, url, error) => Container(
+          color: AppColors.surfaceContainerHigh(),
+          child: Center(
+            child: Icon(
+              Icons.error_outline,
+              color: AppColors.error(),
+            ),
           ),
         ),
       ),
