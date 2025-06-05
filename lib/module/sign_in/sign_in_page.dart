@@ -139,7 +139,13 @@ class SignInPageState extends State<SignInPage> with WidgetsBindingObserver {
                             children: [
                               visionInputField(
                                 controller: tecEmailAddress,
-                                label: "username".tr(),
+                                label: "email".tr(),
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return "email_is_required".tr();
+                                  }
+                                  return null;
+                                },
                                 icon: Icons.alternate_email,
                               ),
                               SizedBox(height: Dimensions.size15),
@@ -147,6 +153,12 @@ class SignInPageState extends State<SignInPage> with WidgetsBindingObserver {
                                 controller: tecPassword,
                                 label: "password".tr(),
                                 icon: Icons.lock,
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return "password_is_required".tr();
+                                  }
+                                  return null;
+                                },
                                 obscureText: obscurePassword,
                                 suffixIcon: IconButton(
                                   icon: Icon(
@@ -216,6 +228,7 @@ class SignInPageState extends State<SignInPage> with WidgetsBindingObserver {
     required TextEditingController controller,
     required String label,
     required IconData icon,
+    String? Function(String?)? validator,
     bool obscureText = false,
     Widget? suffixIcon,
   }) {
@@ -235,6 +248,7 @@ class SignInPageState extends State<SignInPage> with WidgetsBindingObserver {
           child: TextFormField(
             controller: controller,
             obscureText: obscureText,
+            validator: validator,
             style: const TextStyle(color: Colors.white),
             decoration: InputDecoration(
               prefixIcon: Icon(icon, color: Colors.white70),

@@ -10,7 +10,6 @@ import "package:cctv_sasat/module/sign_up/sign_up_state.dart";
 import "package:easy_localization/easy_localization.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
-import "package:image_picker/image_picker.dart";
 import "package:shared_preferences/shared_preferences.dart";
 import "package:smooth_corner/smooth_corner.dart";
 
@@ -54,15 +53,6 @@ class _SignUpPageState extends State<SignUpPage> {
     });
   }
 
-  Future<void> _pickImage() async {
-    final picked = await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (picked != null) {
-      setState(() {
-        profileImage = File(picked.path);
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return BlocListener<SignUpBloc, SignUpState>(
@@ -89,26 +79,6 @@ class _SignUpPageState extends State<SignUpPage> {
                       curve: Curves.easeOut,
                       child: _visionHeader(),
                     ),
-                    SizedBox(height: Dimensions.size20),
-                    GestureDetector(
-                      onTap: _pickImage,
-                      child: CircleAvatar(
-                        radius: Dimensions.size45,
-                        backgroundImage: profileImage != null
-                            ? FileImage(profileImage!)
-                            : const AssetImage("assets/image/logo.png")
-                                as ImageProvider,
-                        backgroundColor: Colors.white24,
-                      ),
-                    ),
-                    SizedBox(height: Dimensions.size10),
-                    Text(
-                      "tap_to_upload_photo".tr(),
-                      style: TextStyle(
-                        color: Colors.white70,
-                        fontSize: Dimensions.text12,
-                      ),
-                    ),
                     SizedBox(height: Dimensions.size30),
                     Form(
                       key: formKey,
@@ -118,18 +88,36 @@ class _SignUpPageState extends State<SignUpPage> {
                             name,
                             "name".tr(),
                             Icons.person,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return "name_is_required".tr();
+                              }
+                              return null;
+                            },
                           ),
                           SizedBox(height: Dimensions.size15),
                           _buildInputField(
                             username,
                             "username".tr(),
                             Icons.supervised_user_circle_rounded,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return "username_is_required";
+                              }
+                              return null;
+                            },
                           ),
                           SizedBox(height: Dimensions.size15),
                           _buildInputField(
                             tecEmail,
                             "email".tr(),
                             Icons.alternate_email,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return "Email is required";
+                              }
+                              return null;
+                            },
                           ),
                           SizedBox(height: Dimensions.size15),
                           _buildInputField(
@@ -146,10 +134,15 @@ class _SignUpPageState extends State<SignUpPage> {
                               ),
                               onPressed: () {
                                 setState(
-                                  () => obscurePassword = !obscurePassword,
-                                );
+                                    () => obscurePassword = !obscurePassword,);
                               },
                             ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return "Password is required";
+                              }
+                              return null;
+                            },
                           ),
                           SizedBox(height: Dimensions.size30),
                           _buildVisionButton(
@@ -216,12 +209,14 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget _buildBackground() {
     return Container(
       decoration: BoxDecoration(
-        image: DecorationImage(
-          image: backgroundPath!.startsWith("assets/")
-              ? AssetImage(backgroundPath!) as ImageProvider
-              : FileImage(File(backgroundPath!)),
-          fit: BoxFit.cover,
-        ),
+        image: backgroundPath != null
+            ? DecorationImage(
+                image: backgroundPath!.startsWith("assets/")
+                    ? AssetImage(backgroundPath!) as ImageProvider
+                    : FileImage(File(backgroundPath!)),
+                fit: BoxFit.cover,
+              )
+            : null,
       ),
       child: BackdropFilter(
         filter: ImageFilter.blur(
@@ -239,6 +234,7 @@ class _SignUpPageState extends State<SignUpPage> {
     IconData icon, {
     bool obscureText = false,
     Widget? suffixIcon,
+    String? Function(String?)? validator, // <--- Tambahkan ini
   }) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(Dimensions.size20),
@@ -257,6 +253,7 @@ class _SignUpPageState extends State<SignUpPage> {
             controller: controller,
             obscureText: obscureText,
             style: const TextStyle(color: Colors.white),
+            validator: validator, // <--- Tambahkan ini
             decoration: InputDecoration(
               prefixIcon: Icon(icon, color: Colors.white70),
               suffixIcon: suffixIcon,

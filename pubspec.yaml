@@ -1,7 +1,7 @@
 name: cctv_sasat
 description: project pantauan cctv by satria ramadan.
 publish_to: none
-version: 1.0.0
+version: 1.0.1
 
 environment:
   sdk: ^3.6.1

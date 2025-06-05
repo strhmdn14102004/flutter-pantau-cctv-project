@@ -7,31 +7,32 @@ import "package:easy_localization/easy_localization.dart";
 
 class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
   SignUpBloc() : super(SignUpInitial()) {
-    on<SignUpSubmit>((event, emit) async {
-      emit(SignUpSubmitLoading());
+    on<SignUpSubmit>(_onSignUpSubmit);
+  }
 
-      try {
-        final response = await ApiManager.signUp(
-          signUpRequest: SignUpRequest(
-            email: event.email,
-            password: event.password,
-            name: event.name,
-            username: event.username,
-          ),
-        );
+  Future<void> _onSignUpSubmit(SignUpSubmit event, Emitter<SignUpState> emit) async {
+    emit(SignUpSubmitLoading());
+    try {
+      final response = await ApiManager.signUp(
+        signUpRequest: SignUpRequest(
+          email: event.email,
+          password: event.password,
+          name: event.name,
+          username: event.username,
+        ),
+      );
 
-        if (response.statusCode == 200) {
-          emit(SignUpSubmitSuccess(message: "register_success".tr()));
-        } else {
-          emit(
-            SignUpSubmitError(
-              error: "terjadi_kesalahan_ketika_mendaftar".tr(),
-            ),
-          );
-        }
-      } catch (e) {
-        emit(SignUpSubmitError(error: e.toString()));
+      final status = response.statusCode ?? 0;
+      if (status == 200 || status == 201) {
+        final message = response.data?["data"]?["message"] ?? "register_success".tr();
+        emit(SignUpSubmitSuccess(message: message));
+      } else {
+        emit(SignUpSubmitError(
+          error: "terjadi_kesalahan_ketika_mendaftar".tr(),
+        ),);
       }
-    });
+    } catch (e) {
+      emit(SignUpSubmitError(error: e.toString()));
+    }
   }
 }
