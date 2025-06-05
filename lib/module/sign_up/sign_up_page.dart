@@ -146,7 +146,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           ),
                           SizedBox(height: Dimensions.size30),
                           _buildVisionButton(
-                            label: "sign_up".tr(),
+                            label: "Signup".tr(),
                             onPressed: () {
                               if (formKey.currentState!.validate()) {
                                 context.read<SignUpBloc>().add(

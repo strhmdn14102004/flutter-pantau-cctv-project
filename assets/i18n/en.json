@@ -1,8 +1,10 @@
 {
   "locale": "en",
   "got_it": "Got it",
-  "username": "username",
-  "password": "password",
+  "username": "Username",
+  "password": "Password",
+  "email":"Email",
+  "Signup":"Sign up",
   "sign_in": "Sign in",
   "sign_in_with_your_account": "Sign in with your account",
   "dont_have_account": "Don't have an account?",
@@ -41,6 +43,7 @@
   "change_wallpaper": "Change wallpaper",
   "default_wallpaper": "Default wallpaper",
   "custom_wallpaper": "Custom wallpaper",
+
   "pick_from_gallery": "Pick from gallery",
   "system": "System",
   "name_is_required":"Name is required",
