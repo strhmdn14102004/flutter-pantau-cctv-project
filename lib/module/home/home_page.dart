@@ -498,7 +498,7 @@ Widget _buildLocationFilter() {
                     borderRadius: BorderRadius.vertical(
                       top: Radius.circular(Dimensions.size20),
                     ),
-                    child: Container(
+                    child: SizedBox(
                       width: double.infinity,
                       child: isIOS
                           ? _buildThumbnail(cctv.thumbnailUrl)

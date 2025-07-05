@@ -2,7 +2,6 @@
 
 import "package:flutter/material.dart";
 import "package:intl/intl.dart";
-import "package:jiffy/jiffy.dart";
 
 extension TimeOfDayExtension on TimeOfDay {
   int compareTo(TimeOfDay other) {
@@ -49,18 +48,6 @@ extension MoveElement<T> on List<T> {
   }
 }
 
-extension JiffyExtension on Jiffy {
-  static Jiffy min = Jiffy.parseFromDateTime(DateTime(1900, 1, 1));
-  static Jiffy max = Jiffy.parseFromDateTime(DateTime(2099, 12, 31));
-
-  String dateFormat() {
-    return format(pattern: "yyyy-MM-dd");
-  }
-
-  String dateTimeFormat() {
-    return format(pattern: "yyyy-MM-dd HH:mm");
-  }
-}
 
 extension NumberExtension on num {
   String currency() {

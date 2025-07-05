@@ -1,10 +1,10 @@
-// ignore_for_file: empty_catches
+// ignore_for_file: depend_on_referenced_packages
 
 import "package:basic_utils/basic_utils.dart";
 import "package:cctv_sasat/helper/extensions.dart";
 import "package:easy_localization/easy_localization.dart";
+
 import "package:flutter/material.dart";
-import "package:jiffy/jiffy.dart";
 
 class Formats {
   static String spell(dynamic value) {
@@ -15,10 +15,8 @@ class Formats {
         return value.currency();
       } else if (value is bool) {
         return value ? "yes".tr() : "no".tr();
-      } else if (value is Jiffy) {
-        return dateTime(jiffy: value);
       } else if (value is DateTime) {
-        return dateAlternative(dateTime: value);
+        return dateTimeAlternative(dateTime: value);
       } else {
         return value.toString();
       }
@@ -27,23 +25,28 @@ class Formats {
     }
   }
 
-  static Jiffy? tryParseJiffy(dynamic value) {
+  static final _currencyFormat = NumberFormat.currency(
+    locale: "id_ID",
+    symbol: "Rp ",
+    decimalDigits: 0,
+  );
+
+  static String currency(int amount) {
+    return _currencyFormat.format(amount);
+  }
+
+  static DateTime? tryParseDate(dynamic value) {
     if (value != null) {
       if (value is String) {
         try {
-          return Jiffy.parse(value);
-        } catch (ex) {
-          try {
-            return Jiffy.parseFromDateTime(DateTime.parse(value));
-          } catch (ex) {}
-        }
+          return DateTime.parse(value);
+        } catch (_) {}
       } else if (value is int) {
         try {
-          return Jiffy.parseFromMillisecondsSinceEpoch(value);
-        } catch (ex) {}
+          return DateTime.fromMillisecondsSinceEpoch(value);
+        } catch (_) {}
       }
     }
-
     return null;
   }
 
@@ -54,7 +57,6 @@ class Formats {
         minute: int.parse(string.split(":")[1]),
       );
     }
-
     return null;
   }
 
@@ -63,19 +65,14 @@ class Formats {
       if (value is String) {
         try {
           return NumberFormat("", "id").parse(value);
-        } catch (ignored) {
+        } catch (_) {
           return num.tryParse(value) ?? 0;
         }
-      } else if (value is int) {
+      } else if (value is int || value is double) {
         return value;
-      } else if (value is double) {
-        return value;
-      } else {
-        return 0;
       }
-    } else {
-      return 0;
     }
+    return 0;
   }
 
   static bool tryParseBool(dynamic value) {
@@ -86,48 +83,12 @@ class Formats {
         return value == 1;
       } else if (value is bool) {
         return value;
-      } else {
-        return false;
       }
-    } else {
-      return false;
     }
+    return false;
   }
 
   static String date({
-    Jiffy? jiffy,
-    String defaultString = "",
-  }) {
-    if (jiffy != null) {
-      return jiffy.toLocal().format(pattern: "d MMM 'yy");
-    } else {
-      return defaultString;
-    }
-  }
-
-  static String dateTime({
-    Jiffy? jiffy,
-    String defaultString = "",
-  }) {
-    if (jiffy != null) {
-      return jiffy.toLocal().format(pattern: "d MMM 'yy HH:mm");
-    } else {
-      return defaultString;
-    }
-  }
-
-  static String time({
-    Jiffy? jiffy,
-    String defaultString = "",
-  }) {
-    if (jiffy != null) {
-      return jiffy.toLocal().format(pattern: "HH:mm");
-    } else {
-      return defaultString;
-    }
-  }
-
-  static String dateAlternative({
     DateTime? dateTime,
     String defaultString = "",
   }) {
@@ -138,7 +99,7 @@ class Formats {
     }
   }
 
-  static String dateTimeAlternative({
+  static String dateTime({
     DateTime? dateTime,
     String defaultString = "",
   }) {
@@ -148,6 +109,34 @@ class Formats {
       return defaultString;
     }
   }
+
+  static String time({
+    DateTime? dateTime,
+    String defaultString = "",
+  }) {
+    if (dateTime != null) {
+      return DateFormat("HH:mm", "id").format(dateTime.toLocal());
+    } else {
+      return defaultString;
+    }
+  }
+
+  static String dateAlternative({
+    DateTime? dateTime,
+    String defaultString = "",
+  }) {
+    return date(dateTime: dateTime, defaultString: defaultString);
+  }
+
+  static String dateTimeAlternative({
+  DateTime? dateTime,
+  String defaultString = "",
+}) {
+  return dateTime != null
+      ? DateFormat("d MMM ''yy HH:mm", "id").format(dateTime.toLocal())
+      : defaultString;
+}
+
 
   static String timeAlternative({
     TimeOfDay? timeOfDay,
@@ -164,43 +153,34 @@ class Formats {
   static Map<String, dynamic> convert(Map<String, dynamic> map) {
     map.forEach((key, value) {
       if (value != null) {
-        if (value is Jiffy) {
-          map[key] = value.format();
-        } else if (value is DateTime) {
-          map[key] = Jiffy.parseFromDateTime(value).dateFormat();
+        if (value is DateTime) {
+          map[key] = DateFormat("yyyy-MM-ddTHH:mm:ss").format(value.toUtc());
         } else if (value is List) {
-          for (dynamic detailValue in value) {
-            if (detailValue is Jiffy) {
-              detailValue = detailValue.format();
-            } else if (detailValue is DateTime) {
-              detailValue = Jiffy.parseFromDateTime(detailValue).dateFormat();
-            } else if (detailValue is Map<String, dynamic>) {
-              convert(detailValue);
+          for (var i = 0; i < value.length; i++) {
+            var item = value[i];
+            if (item is DateTime) {
+              value[i] = DateFormat("yyyy-MM-ddTHH:mm:ss").format(item.toUtc());
+            } else if (item is Map<String, dynamic>) {
+              convert(item);
             }
           }
         }
       }
     });
-
     return map;
   }
 
   static String initials(String string) {
     int length = 2;
-
-    List<String> strings = string.split(" ");
-
-    if (strings.length < length) {
-      length = strings.length;
-    }
+    List<String> strings = string.trim().split(" ");
+    length = strings.length < length ? strings.length : length;
 
     String result = "";
-
     for (var i = 0; i < length; i++) {
       result += strings[i][0];
     }
 
-    return result;
+    return result.toUpperCase();
   }
 
   static String coalesce(String? value, {String? defaultString}) {
