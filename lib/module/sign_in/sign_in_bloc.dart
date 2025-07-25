@@ -15,54 +15,65 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
   }
 
   Future<void> _onSignInSubmit(
-  SignInSubmit event,
-  Emitter<SignInState> emit,
-) async {
-  emit(SignInSubmitLoading());
+    SignInSubmit event,
+    Emitter<SignInState> emit,
+  ) async {
+    emit(SignInSubmitLoading());
 
-  try {
-    final response = await ApiManager.signIn(signInRequest: event.signInRequest);
+    try {
+      final response =
+          await ApiManager.signIn(signInRequest: event.signInRequest);
 
-    if (response.statusCode == 200) {
-      final parsed = response.data;
-      final signInResponse = SignInResponse.fromJson(parsed);
+      if (response.statusCode == 200) {
+        final parsed = response.data;
+        final signInResponse = SignInResponse.fromJson(parsed);
 
-      await _saveUserSession(signInResponse);
-      emit(SignInSubmitSuccess(data: signInResponse));
-    } else {
+        await _saveUserSession(signInResponse);
+        emit(SignInSubmitSuccess(data: signInResponse));
+      } else {
+        emit(
+          SignInSubmitFailed(
+            errorMessage:
+                "login_failed.please_check_your_username_and_password".tr(),
+          ),
+        );
+      }
+    } on DioException catch (e) {
+      String errorMessage = "login_failed".tr();
+
+      if (e.response != null && e.response?.data != null) {
+        final data = e.response?.data;
+        if (data is Map<String, dynamic> && data.containsKey("message")) {
+          errorMessage = data["message"].toString();
+        }
+      }
+
+      emit(SignInSubmitFailed(errorMessage: errorMessage));
+    } catch (e) {
       emit(
         SignInSubmitFailed(
-          errorMessage:
-              "login_failed.please_check_your_username_and_password".tr(),
+          errorMessage: "login_failed.Please_try_again".tr(),
         ),
       );
+    } finally {
+      emit(SignInSubmitFinished());
     }
-  } on DioException catch (e) {
-    String errorMessage = "login_failed".tr();
-
-    if (e.response != null && e.response?.data != null) {
-      final data = e.response?.data;
-      if (data is Map<String, dynamic> && data.containsKey("message")) {
-        errorMessage = data["message"].toString();
-      }
-    }
-
-    emit(SignInSubmitFailed(errorMessage: errorMessage));
-  } catch (e) {
-    emit(SignInSubmitFailed(errorMessage: "login_failed.Please_try_again".tr()));
-  } finally {
-    emit(SignInSubmitFinished());
   }
-}
 
   Future<void> _saveUserSession(SignInResponse response) async {
     final prefs = await SharedPreferences.getInstance();
+    // Save token
     await prefs.setString("auth_token", response.data.token);
 
+    // Save all user data
     final userData = {
       "id": response.data.user.id,
+      "username": response.data.user.username,
       "name": response.data.user.name,
       "email": response.data.user.email,
+      "photoUrl": response.data.user.photoUrl,
+      "role": response.data.user.role,
+      "accountStatus": response.data.user.accountStatus,
     };
     await prefs.setString("user_data", jsonEncode(userData));
   }

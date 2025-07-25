@@ -6,6 +6,8 @@ import "package:cctv_sasat/main_bloc.dart";
 import "package:cctv_sasat/main_state.dart";
 import "package:cctv_sasat/module/account/account_bloc.dart";
 import "package:cctv_sasat/module/account/account_page.dart";
+import "package:cctv_sasat/module/account/change_wallpaper.dart";
+import "package:cctv_sasat/module/account/upgrade_to_pro.dart";
 import "package:cctv_sasat/module/home/home_bloc.dart";
 import "package:cctv_sasat/module/home/home_page.dart";
 import "package:cctv_sasat/module/root/root_bloc.dart";
@@ -15,6 +17,7 @@ import "package:cctv_sasat/module/sign_in/sign_in_page.dart";
 import "package:cctv_sasat/module/sign_up/sign_up_bloc.dart";
 import "package:cctv_sasat/module/sign_up/sign_up_page.dart";
 import "package:cctv_sasat/shared.dart";
+import "package:cctv_sasat/wallpaper_notifier.dart";
 import "package:easy_localization/easy_localization.dart" as el;
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
@@ -28,6 +31,7 @@ import "package:provider/provider.dart";
 import "package:shared_preferences/shared_preferences.dart";
 import "package:smooth_corner/smooth_corner.dart";
 
+final wallpaperNotifier = WallpaperNotifier.instance;
 final goRouter = GoRouter(
   initialLocation: "/",
   navigatorKey: Get.key,
@@ -43,6 +47,18 @@ final goRouter = GoRouter(
       path: "/sign-up",
       builder: (context, state) {
         return const SignUpPage();
+      },
+    ),
+    GoRoute(
+      path: "/change-wallpaper",
+      builder: (context, state) {
+        return const WallpaperSettingsPage();
+      },
+    ),
+    GoRoute(
+      path: "/upgrade-account",
+      builder: (context, state) {
+        return const UpgradeAccountPage();
       },
     ),
     StatefulShellRoute.indexedStack(
@@ -280,149 +296,157 @@ class AppState extends State<App> {
           child: DismissKeyboard(
             child: BlocBuilder<MainBloc, MainState>(
               builder: (context, state) {
-                return MaterialApp.router(
-                  scrollBehavior: BaseScrollBehavior(),
-                  scaffoldMessengerKey: rootScaffoldMessengerKey,
-                  title: "Pantau CCTV",
-                  routerConfig: goRouter,
-                  localizationsDelegates: context.localizationDelegates,
-                  supportedLocales: context.supportedLocales,
-                  locale: context.locale,
-                  debugShowCheckedModeBanner: false,
-                  theme: ThemeData(
-                    useMaterial3: true,
-                    fontFamily: "Manrope",
-                    colorScheme: AppColors.lightColorScheme,
-                    filledButtonTheme: FilledButtonThemeData(
-                      style: FilledButton.styleFrom(
-                        visualDensity: VisualDensity.comfortable,
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        shape: SmoothRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(Dimensions.size10),
-                          smoothness: 1,
+                return ValueListenableBuilder<String?>(
+                  valueListenable: wallpaperNotifier,
+                  builder: (context, wallpaperPath, _) {
+                    return MaterialApp.router(
+                      scrollBehavior: BaseScrollBehavior(),
+                      scaffoldMessengerKey: rootScaffoldMessengerKey,
+                      title: "Finance Tracker",
+                      routerConfig: goRouter,
+                      localizationsDelegates: context.localizationDelegates,
+                      supportedLocales: context.supportedLocales,
+                      locale: context.locale,
+                      debugShowCheckedModeBanner: false,
+                      theme: ThemeData(
+                        useMaterial3: true,
+                        fontFamily: "Manrope",
+                        colorScheme: AppColors.lightColorScheme,
+                        filledButtonTheme: FilledButtonThemeData(
+                          style: FilledButton.styleFrom(
+                            visualDensity: VisualDensity.comfortable,
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            shape: SmoothRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.circular(Dimensions.size10),
+                              smoothness: 1,
+                            ),
+                            padding: EdgeInsets.all(Dimensions.size20),
+                            textStyle: TextStyle(
+                              fontSize: Dimensions.text12,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
                         ),
-                        padding: EdgeInsets.all(Dimensions.size20),
-                        textStyle: TextStyle(
-                          fontSize: Dimensions.text12,
-                          fontWeight: FontWeight.w500,
+                        outlinedButtonTheme: OutlinedButtonThemeData(
+                          style: OutlinedButton.styleFrom(
+                            visualDensity: VisualDensity.comfortable,
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            shape: SmoothRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.circular(Dimensions.size10),
+                              smoothness: 1,
+                            ),
+                            padding: EdgeInsets.all(Dimensions.size20),
+                            textStyle: TextStyle(
+                              fontSize: Dimensions.text12,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            foregroundColor: AppColors.onSurface(),
+                            iconColor: AppColors.onSurface(),
+                          ),
                         ),
-                      ),
-                    ),
-                    outlinedButtonTheme: OutlinedButtonThemeData(
-                      style: OutlinedButton.styleFrom(
-                        visualDensity: VisualDensity.comfortable,
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        shape: SmoothRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(Dimensions.size10),
-                          smoothness: 1,
+                        textButtonTheme: TextButtonThemeData(
+                          style: TextButton.styleFrom(
+                            visualDensity: VisualDensity.comfortable,
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            shape: SmoothRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.circular(Dimensions.size10),
+                              smoothness: 1,
+                            ),
+                            padding: EdgeInsets.all(Dimensions.size20),
+                            textStyle: TextStyle(
+                              fontSize: Dimensions.text12,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
                         ),
-                        padding: EdgeInsets.all(Dimensions.size20),
-                        textStyle: TextStyle(
-                          fontSize: Dimensions.text12,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        foregroundColor: AppColors.onSurface(),
-                        iconColor: AppColors.onSurface(),
-                      ),
-                    ),
-                    textButtonTheme: TextButtonThemeData(
-                      style: TextButton.styleFrom(
-                        visualDensity: VisualDensity.comfortable,
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        shape: SmoothRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(Dimensions.size10),
-                          smoothness: 1,
-                        ),
-                        padding: EdgeInsets.all(Dimensions.size20),
-                        textStyle: TextStyle(
-                          fontSize: Dimensions.text12,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                    iconButtonTheme: IconButtonThemeData(
-                      style: IconButton.styleFrom(
-                        visualDensity: VisualDensity.comfortable,
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        padding: EdgeInsets.zero,
-                        minimumSize:
-                            Size.square(Dimensions.size45 + Dimensions.size3),
-                      ),
-                    ),
-                  ),
-                  darkTheme: ThemeData(
-                    useMaterial3: true,
-                    fontFamily: "Manrope",
-                    colorScheme: AppColors.darkColorScheme,
-                    filledButtonTheme: FilledButtonThemeData(
-                      style: FilledButton.styleFrom(
-                        visualDensity: VisualDensity.comfortable,
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        shape: SmoothRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(Dimensions.size10),
-                          smoothness: 1,
-                        ),
-                        padding: EdgeInsets.all(Dimensions.size20),
-                        textStyle: TextStyle(
-                          fontSize: Dimensions.text12,
-                          fontWeight: FontWeight.w500,
+                        iconButtonTheme: IconButtonThemeData(
+                          style: IconButton.styleFrom(
+                            visualDensity: VisualDensity.comfortable,
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            padding: EdgeInsets.zero,
+                            minimumSize: Size.square(
+                              Dimensions.size45 + Dimensions.size3,
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                    outlinedButtonTheme: OutlinedButtonThemeData(
-                      style: OutlinedButton.styleFrom(
-                        visualDensity: VisualDensity.comfortable,
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        shape: SmoothRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(Dimensions.size10),
-                          smoothness: 1,
+                      darkTheme: ThemeData(
+                        useMaterial3: true,
+                        fontFamily: "Manrope",
+                        colorScheme: AppColors.darkColorScheme,
+                        filledButtonTheme: FilledButtonThemeData(
+                          style: FilledButton.styleFrom(
+                            visualDensity: VisualDensity.comfortable,
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            shape: SmoothRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.circular(Dimensions.size10),
+                              smoothness: 1,
+                            ),
+                            padding: EdgeInsets.all(Dimensions.size20),
+                            textStyle: TextStyle(
+                              fontSize: Dimensions.text12,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
                         ),
-                        padding: EdgeInsets.all(Dimensions.size20),
-                        textStyle: TextStyle(
-                          fontSize: Dimensions.text12,
-                          fontWeight: FontWeight.w500,
+                        outlinedButtonTheme: OutlinedButtonThemeData(
+                          style: OutlinedButton.styleFrom(
+                            visualDensity: VisualDensity.comfortable,
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            shape: SmoothRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.circular(Dimensions.size10),
+                              smoothness: 1,
+                            ),
+                            padding: EdgeInsets.all(Dimensions.size20),
+                            textStyle: TextStyle(
+                              fontSize: Dimensions.text12,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            foregroundColor: AppColors.onSurface(),
+                            iconColor: AppColors.onSurface(),
+                          ),
                         ),
-                        foregroundColor: AppColors.onSurface(),
-                        iconColor: AppColors.onSurface(),
+                        textButtonTheme: TextButtonThemeData(
+                          style: TextButton.styleFrom(
+                            visualDensity: VisualDensity.comfortable,
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            shape: SmoothRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.circular(Dimensions.size10),
+                              smoothness: 1,
+                            ),
+                            padding: EdgeInsets.all(Dimensions.size20),
+                            textStyle: TextStyle(
+                              fontSize: Dimensions.text12,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                        iconButtonTheme: IconButtonThemeData(
+                          style: IconButton.styleFrom(
+                            visualDensity: VisualDensity.comfortable,
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            padding: EdgeInsets.zero,
+                            minimumSize: Size.square(
+                              Dimensions.size45 + Dimensions.size3,
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
-                    textButtonTheme: TextButtonThemeData(
-                      style: TextButton.styleFrom(
-                        visualDensity: VisualDensity.comfortable,
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        shape: SmoothRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(Dimensions.size10),
-                          smoothness: 1,
-                        ),
-                        padding: EdgeInsets.all(Dimensions.size20),
-                        textStyle: TextStyle(
-                          fontSize: Dimensions.text12,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                    iconButtonTheme: IconButtonThemeData(
-                      style: IconButton.styleFrom(
-                        visualDensity: VisualDensity.comfortable,
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        padding: EdgeInsets.zero,
-                        minimumSize:
-                            Size.square(Dimensions.size45 + Dimensions.size3),
-                      ),
-                    ),
-                  ),
-                  themeMode: state.themeMode,
-                  builder: (BuildContext context, Widget? child) {
-                    return MediaQuery(
-                      data: MediaQuery.of(context)
-                          .copyWith(textScaler: const TextScaler.linear(1.0)),
-                      child: child ?? Container(),
+                      themeMode: state.themeMode,
+                      builder: (BuildContext context, Widget? child) {
+                        return MediaQuery(
+                          data: MediaQuery.of(context).copyWith(
+                            textScaler: const TextScaler.linear(1.0),
+                          ),
+                          child: child ?? Container(),
+                        );
+                      },
                     );
                   },
                 );

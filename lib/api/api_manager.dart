@@ -12,6 +12,7 @@ import "package:cctv_sasat/constant/api_url.dart";
 import "package:cctv_sasat/helper/formats.dart";
 import "package:dio/dio.dart";
 import "package:flutter/foundation.dart";
+import "package:shared_preferences/shared_preferences.dart";
 
 class ApiManager {
   static bool PRIMARY = true;
@@ -98,10 +99,25 @@ class ApiManager {
 
   static Future<List<CctvItem>> getAllCctvs() async {
     try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString("auth_token");
+
+      if (token == null) {
+        throw Exception("User not authenticated");
+      }
+
       Dio dio = await getDio();
-      final response = await dio.get(ApiUrl.CCTV.path);
+      final response = await dio.get(
+        ApiUrl.CCTV.path,
+        options: Options(
+          headers: {
+            "Authorization": "Bearer $token",
+          },
+        ),
+      );
+
       if (response.statusCode == 200) {
-        final List data = response.data["data"]; // FIXED di sini
+        final List data = response.data["data"];
         return data.map((json) => CctvItem.fromJson(json)).toList();
       } else {
         throw Exception("Gagal memuat data CCTV");

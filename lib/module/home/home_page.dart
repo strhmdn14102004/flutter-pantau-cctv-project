@@ -8,6 +8,7 @@ import "package:base/base.dart";
 import "package:cached_network_image/cached_network_image.dart";
 import "package:cctv_sasat/api/endpoint/cctv/cctv_item.dart";
 import "package:cctv_sasat/helper/formats.dart";
+import "package:cctv_sasat/main.dart";
 import "package:cctv_sasat/module/home/home_bloc.dart";
 import "package:cctv_sasat/module/home/home_event.dart";
 import "package:cctv_sasat/module/home/home_state.dart";
@@ -71,109 +72,152 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<HomeBloc, HomeState>(
-      listener: (context, state) {
-        if (state is CctvDataLoading) {
-          setState(() => loading = true);
-        } else if (state is CctvDataLoaded || state is CctvDataError) {
-          setState(() => loading = false);
-        }
-      },
-      child: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle(
-          statusBarColor: Colors.transparent,
-          statusBarIconBrightness: Brightness.light,
-        ),
-        child: Scaffold(
-          extendBodyBehindAppBar: true,
-          backgroundColor: Colors.transparent,
-          body: Stack(
-            fit: StackFit.expand,
-            children: [
-              if (backgroundPath == null)
-                Container(
-                  decoration: const BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage("assets/image/background.png"),
-                      fit: BoxFit.cover,
+    return ValueListenableBuilder<String?>(
+      valueListenable: wallpaperNotifier,
+      builder: (context, wallpaperPath, _) {
+        return BlocListener<HomeBloc, HomeState>(
+          listener: (context, state) {
+            if (state is CctvDataLoading) {
+              setState(() => loading = true);
+            } else if (state is CctvDataLoaded || state is CctvDataError) {
+              setState(() => loading = false);
+            }
+          },
+          child: AnnotatedRegion<SystemUiOverlayStyle>(
+            value: SystemUiOverlayStyle(
+              statusBarColor: Colors.transparent,
+              statusBarIconBrightness: Brightness.light,
+            ),
+            child: Scaffold(
+              extendBodyBehindAppBar: true,
+              backgroundColor: Colors.transparent,
+              body: Stack(
+                fit: StackFit.expand,
+                children: [
+                  if (backgroundPath == null)
+                    Container(
+                      decoration: const BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage("assets/image/background.png"),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    )
+                  else
+                    Container(
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: backgroundPath!.startsWith("assets/")
+                              ? AssetImage(backgroundPath!) as ImageProvider
+                              : FileImage(File(backgroundPath!)),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                  BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+                    child: Container(
+                      color: Colors.black.withOpacity(0.2),
                     ),
                   ),
-                )
-              else
-                Container(
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: backgroundPath!.startsWith("assets/")
-                          ? AssetImage(backgroundPath!) as ImageProvider
-                          : FileImage(File(backgroundPath!)),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-              BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-                child: Container(
-                  color: Colors.black.withOpacity(0.2),
-                ),
-              ),
-              SafeArea(
-                child: Padding(
-                  padding: EdgeInsets.all(Dimensions.size15),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _buildHeader(),
-                      SizedBox(height: Dimensions.size15),
-                      Row(
+                  SafeArea(
+                    child: Padding(
+                      padding: EdgeInsets.all(Dimensions.size15),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Expanded(child: _buildSearchField()),
-                          SizedBox(width: Dimensions.size10),
-                          _buildFilterButton(),
+                          _buildHeader(),
+                          SizedBox(height: Dimensions.size15),
+                          Row(
+                            children: [
+                              Expanded(child: _buildSearchField()),
+                              SizedBox(width: Dimensions.size10),
+                              _buildFilterButton(),
+                            ],
+                          ),
+                          SizedBox(height: Dimensions.size20),
+                          _buildLocationFilter(),
+                          SizedBox(height: Dimensions.size20),
+                          Expanded(child: _buildBody()),
                         ],
                       ),
-                      SizedBox(height: Dimensions.size20),
-                      _buildLocationFilter(),
-                      SizedBox(height: Dimensions.size20),
-                      Expanded(child: _buildBody()),
-                    ],
+                    ),
                   ),
-                ),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
-Widget _buildLocationFilter() {
-  return BlocBuilder<HomeBloc, HomeState>(
-    builder: (context, state) {
-      if (state is! CctvDataLoaded) {
-        return const SizedBox.shrink();
-      }
+  Widget _buildLocationFilter() {
+    return BlocBuilder<HomeBloc, HomeState>(
+      builder: (context, state) {
+        if (state is! CctvDataLoaded) {
+          return const SizedBox.shrink();
+        }
 
-      final locations = state.locations;
-      final selectedId = state.selectedLocationId;
-      if (locations.isEmpty) {
-        return const SizedBox.shrink();
-      }
+        final locations = state.locations;
+        final selectedId = state.selectedLocationId;
+        if (locations.isEmpty) {
+          return const SizedBox.shrink();
+        }
 
-      return SizedBox(
-        height: Dimensions.size45,
-        child: ListView.separated(
-          scrollDirection: Axis.horizontal,
-          itemCount: locations.length + 1,
-          separatorBuilder: (_, __) => SizedBox(width: Dimensions.size5),
-          itemBuilder: (context, index) {
-            if (index == 0) {
+        return SizedBox(
+          height: Dimensions.size45,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            itemCount: locations.length + 1,
+            separatorBuilder: (_, __) => SizedBox(width: Dimensions.size5),
+            itemBuilder: (context, index) {
+              if (index == 0) {
+                return Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(Dimensions.size20),
+                    color: selectedId == null
+                        ? Colors.white.withOpacity(0.3)
+                        : Colors.white.withOpacity(0.15),
+                    border: selectedId == null
+                        ? Border.all(color: Colors.white.withOpacity(0.5))
+                        : null,
+                  ),
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(Dimensions.size20),
+                      onTap: () {
+                        context.read<HomeBloc>().add(FilterByLocation(null));
+                      },
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: Dimensions.size15,
+                          vertical: Dimensions.size10,
+                        ),
+                        child: Center(
+                          child: Text(
+                            "All".tr(),
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              }
+
+              final location = locations[index - 1];
               return Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(Dimensions.size20),
-                  color: selectedId == null 
+                  color: selectedId == location.id
                       ? Colors.white.withOpacity(0.3)
                       : Colors.white.withOpacity(0.15),
-                  border: selectedId == null
+                  border: selectedId == location.id
                       ? Border.all(color: Colors.white.withOpacity(0.5))
                       : null,
                 ),
@@ -182,7 +226,9 @@ Widget _buildLocationFilter() {
                   child: InkWell(
                     borderRadius: BorderRadius.circular(Dimensions.size20),
                     onTap: () {
-                      context.read<HomeBloc>().add(FilterByLocation(null));
+                      context
+                          .read<HomeBloc>()
+                          .add(FilterByLocation(location.id));
                     },
                     child: Padding(
                       padding: EdgeInsets.symmetric(
@@ -191,7 +237,7 @@ Widget _buildLocationFilter() {
                       ),
                       child: Center(
                         child: Text(
-                          "All".tr(),
+                          location.name,
                           style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
@@ -202,50 +248,12 @@ Widget _buildLocationFilter() {
                   ),
                 ),
               );
-            }
-
-            final location = locations[index - 1];
-            return Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(Dimensions.size20),
-                color: selectedId == location.id
-                    ? Colors.white.withOpacity(0.3)
-                    : Colors.white.withOpacity(0.15),
-                border: selectedId == location.id
-                    ? Border.all(color: Colors.white.withOpacity(0.5))
-                    : null,
-              ),
-              child: Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(Dimensions.size20),
-                  onTap: () {
-                    context.read<HomeBloc>().add(FilterByLocation(location.id));
-                  },
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: Dimensions.size15,
-                      vertical: Dimensions.size10,
-                    ),
-                    child: Center(
-                      child: Text(
-                        location.name,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            );
-          },
-        ),
-      );
-    },
-  );
-}
+            },
+          ),
+        );
+      },
+    );
+  }
 
   Widget _buildHeader() {
     return Row(
@@ -260,11 +268,8 @@ Widget _buildLocationFilter() {
           ),
         ),
         InkWell(
-          onTap: () async{
-      
-          },
+          onTap: () async {},
           child: CircleAvatar(
-            
             radius: Dimensions.size25,
             backgroundColor: Colors.white.withOpacity(0.15),
             child: Text(
@@ -285,7 +290,7 @@ Widget _buildLocationFilter() {
     return BlocBuilder<HomeBloc, HomeState>(
       builder: (context, state) {
         return TextField(
-          style: TextStyle(color: Colors.white,fontWeight: FontWeight.w700),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
           decoration: InputDecoration(
             filled: true,
             fillColor: Colors.white.withOpacity(0.15),
@@ -457,172 +462,177 @@ Widget _buildLocationFilter() {
   }
 
   Widget _buildCctvCard(CctvItem cctv) {
-  return LayoutBuilder(
-    builder: (context, constraints) {
-      // Split the name into parts if it contains "FTL"
-      final nameParts = cctv.name.split(" ");
-      final isFtl = nameParts.contains("FTL");
-      final firstLine = isFtl ? nameParts.take(2).join(" ") : nameParts.first;
-      final secondLine = isFtl ? nameParts.skip(2).join(" ") : nameParts.skip(1).join(" ");
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // Split the name into parts if it contains "FTL"
+        final nameParts = cctv.name.split(" ");
+        final isFtl = nameParts.contains("FTL");
+        final firstLine = isFtl ? nameParts.take(2).join(" ") : nameParts.first;
+        final secondLine =
+            isFtl ? nameParts.skip(2).join(" ") : nameParts.skip(1).join(" ");
 
-      return GestureDetector(
-        onTap: cctv.isActive
-            ? () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => Scaffold(
-                      appBar: AppBar(title: Text(cctv.name)),
-                      body: WebViewWidget(
-                        controller: WebViewController()
-                          ..setJavaScriptMode(JavaScriptMode.unrestricted)
-                          ..loadRequest(Uri.parse(cctv.sourceUrl)),
+        return GestureDetector(
+          onTap: cctv.isActive
+              ? () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => Scaffold(
+                        appBar: AppBar(title: Text(cctv.name)),
+                        body: WebViewWidget(
+                          controller: WebViewController()
+                            ..setJavaScriptMode(JavaScriptMode.unrestricted)
+                            ..loadRequest(Uri.parse(cctv.sourceUrl)),
+                        ),
+                      ),
+                    ),
+                  );
+                }
+              : null,
+          child: Opacity(
+            opacity: cctv.isActive ? 1.0 : 0.6,
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.15),
+                borderRadius: BorderRadius.circular(Dimensions.size20),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(Dimensions.size20),
+                      ),
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: isIOS
+                            ? _buildThumbnail(cctv.thumbnailUrl)
+                            : WebViewWidget(
+                                controller: WebViewController()
+                                  ..setJavaScriptMode(
+                                    JavaScriptMode.unrestricted,
+                                  )
+                                  ..loadRequest(Uri.parse(cctv.sourceUrl)),
+                              ),
                       ),
                     ),
                   ),
-                );
-              }
-            : null,
-        child: Opacity(
-          opacity: cctv.isActive ? 1.0 : 0.6,
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.15),
-              borderRadius: BorderRadius.circular(Dimensions.size20),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.vertical(
-                      top: Radius.circular(Dimensions.size20),
-                    ),
-                    child: SizedBox(
-                      width: double.infinity,
-                      child: isIOS
-                          ? _buildThumbnail(cctv.thumbnailUrl)
-                          : WebViewWidget(
-                              controller: WebViewController()
-                                ..setJavaScriptMode(JavaScriptMode.unrestricted)
-                                ..loadRequest(Uri.parse(cctv.sourceUrl)),
-                            ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(Dimensions.size10),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      if (isFtl) ...[
-                        Text(
-                          firstLine,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: Dimensions.text16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          secondLine,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: Dimensions.text16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ] else ...[
-                        Text(
-                          cctv.name,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: Dimensions.text16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
-                      SizedBox(height: Dimensions.size4),
-                      Text(
-                        cctv.location.name,
-                        style: TextStyle(color: Colors.white),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      SizedBox(height: Dimensions.size5),
-                      Row(
-                        children: [
-                          Icon(
-                            cctv.isActive ? Icons.check_circle : Icons.cancel,
-                            color: cctv.isActive ? Colors.green : Colors.red,
-                            size: Dimensions.size15,
-                          ),
-                          SizedBox(width: Dimensions.size5),
+                  Padding(
+                    padding: EdgeInsets.all(Dimensions.size10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (isFtl) ...[
                           Text(
-                            cctv.isActive ? "Active".tr() : "Inactive".tr(),
+                            firstLine,
                             style: TextStyle(
-                              color: cctv.isActive ? Colors.green : Colors.red,
-                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                              fontSize: Dimensions.text16,
+                              fontWeight: FontWeight.bold,
                             ),
+                          ),
+                          Text(
+                            secondLine,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: Dimensions.text16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ] else ...[
+                          Text(
+                            cctv.name,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: Dimensions.text16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ],
-                      ),
-                    ],
+                        SizedBox(height: Dimensions.size4),
+                        Text(
+                          cctv.location.name,
+                          style: TextStyle(color: Colors.white),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        SizedBox(height: Dimensions.size5),
+                        Row(
+                          children: [
+                            Icon(
+                              cctv.isActive ? Icons.check_circle : Icons.cancel,
+                              color: cctv.isActive ? Colors.green : Colors.red,
+                              size: Dimensions.size15,
+                            ),
+                            SizedBox(width: Dimensions.size5),
+                            Text(
+                              cctv.isActive ? "Active".tr() : "Inactive".tr(),
+                              style: TextStyle(
+                                color:
+                                    cctv.isActive ? Colors.green : Colors.red,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildThumbnail(String? thumbnailUrl) {
+    if (thumbnailUrl == null || thumbnailUrl.isEmpty) {
+      return ClipRRect(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(Dimensions.size20),
+        ),
+        child: Container(
+          color: Colors.white.withOpacity(0.1),
+          child: Center(
+            child: Icon(
+              Icons.broken_image_rounded,
+              size: Dimensions.size40,
+              color: Colors.white70,
             ),
           ),
         ),
       );
-    },
-  );
-}
- Widget _buildThumbnail(String? thumbnailUrl) {
-  if (thumbnailUrl == null || thumbnailUrl.isEmpty) {
+    }
+
     return ClipRRect(
       borderRadius: BorderRadius.vertical(
         top: Radius.circular(Dimensions.size20),
       ),
-      child: Container(
-        color: Colors.white.withOpacity(0.1),
-        child: Center(
-          child: Icon(
-            Icons.broken_image_rounded,
-            size: Dimensions.size40,
-            color: Colors.white70,
+      child: CachedNetworkImage(
+        imageUrl: thumbnailUrl,
+        fit: BoxFit.cover,
+        width: double.infinity,
+        placeholder: (context, url) => Container(
+          color: Colors.white.withOpacity(0.1),
+          child: Center(child: BaseWidgets.shimmer()),
+        ),
+        errorWidget: (context, url, error) => Container(
+          color: Colors.white.withOpacity(0.1),
+          child: Center(
+            child: Icon(
+              Icons.error_outline,
+              color: Colors.red,
+            ),
           ),
         ),
       ),
     );
   }
-
-  return ClipRRect(
-    borderRadius: BorderRadius.vertical(
-      top: Radius.circular(Dimensions.size20),
-    ),
-    child: CachedNetworkImage(
-      imageUrl: thumbnailUrl,
-      fit: BoxFit.cover,
-      width: double.infinity,
-      placeholder: (context, url) => Container(
-        color: Colors.white.withOpacity(0.1),
-        child: Center(child: BaseWidgets.shimmer()),
-      ),
-      errorWidget: (context, url, error) => Container(
-        color: Colors.white.withOpacity(0.1),
-        child: Center(
-          child: Icon(
-            Icons.error_outline,
-            color: Colors.red,
-          ),
-        ),
-      ),
-    ),
-  );
- }
 
   Widget _buildLiveCctvCard(CctvItem cctv) {
     return Container(
