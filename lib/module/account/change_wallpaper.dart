@@ -19,7 +19,7 @@ class WallpaperSettingsPage extends StatefulWidget {
 class _WallpaperSettingsPageState extends State<WallpaperSettingsPage> {
   final List<String> _defaultWallpapers = [
     "assets/image/background.png",
-    "assets/image/bacgkround.png",
+    "assets/image/background1.png",
   ];
   String? _selectedWallpaperPath;
 

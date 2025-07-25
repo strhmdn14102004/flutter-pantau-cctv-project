@@ -127,6 +127,26 @@ class ApiManager {
     }
   }
 
+  static Future<Response> logout() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString("auth_token");
+
+    if (token == null) {
+      throw Exception("No authentication token found");
+    }
+    Dio dio = await getDio();
+    Response response = await dio.post(
+      ApiUrl.LOGOUT.path,
+      options: Options(
+        headers: {
+          "Authorization": "Bearer $token",
+        },
+      ),
+    );
+
+    return response;
+  }
+
   static Future<List<LocationItem>> getAllLocations() async {
     try {
       Dio dio = await getDio();

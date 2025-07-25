@@ -1,5 +1,9 @@
+import "package:cctv_sasat/api/api_manager.dart";
+import "package:cctv_sasat/constant/api_url.dart";
 import "package:cctv_sasat/shared.dart";
+import "package:dio/dio.dart";
 import "package:easy_localization/easy_localization.dart";
+import "package:flutter/foundation.dart";
 import "package:flutter/material.dart";
 import "package:get/get.dart";
 import "package:go_router/go_router.dart";
@@ -26,9 +30,38 @@ class Generals {
 
   static Future<void> signOut(BuildContext context) async {
     final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString("auth_token");
 
+    // Panggil API logout jika token tersedia
+    if (token != null) {
+      try {
+        final dio = await ApiManager.getDio();
+        final response = await dio.post(
+          ApiUrl.LOGOUT.path,
+          options: Options(
+            headers: {
+              "Authorization": "Bearer $token",
+            },
+          ),
+        );
+
+        // Handle jika logout gagal di server
+        if (response.statusCode != 200) {
+          throw Exception("Logout failed with status ${response.statusCode}");
+        }
+      } catch (e) {
+        // Tangani error jika logout gagal
+        if (kDebugMode) {
+          print("Error during logout: $e");
+        }
+        // Tetap lanjutkan bersihkan data lokal meskipun API gagal
+      }
+    }
+
+    // Bersihkan data lokal
     await prefs.remove("SESSION_ID");
     await prefs.remove("auth_token");
+    await prefs.remove("user_data");
 
     Shared.ACCOUNT = null;
 

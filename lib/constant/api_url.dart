@@ -7,6 +7,7 @@ const String SECONDARY_BASE =
 enum ApiUrl {
   SIGN_IN("auth/login"),
   SIGN_UP("auth/register"),
+  LOGOUT("auth/logout"),
   RESET_PASSWORD("auth/reset-password"),
   CCTV("cctvs"),
   ADD_CCTV("cctvs"),
